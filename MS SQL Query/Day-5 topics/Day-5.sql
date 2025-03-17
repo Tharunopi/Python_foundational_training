@@ -1,0 +1,8 @@
+USE training_1
+
+CREATE TABLE anime(
+	aid INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+	aname VARCHAR(50) NOT NULL,
+	amaincharacter VARCHAR(50) NOT NULL
+)
+
