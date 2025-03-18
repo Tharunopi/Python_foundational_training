@@ -17,12 +17,6 @@ VALUES
 	(10, 'Chennai Trade Centre', 'Chennai')
 
 --booking table 
- ALTER TABLE Booking
- DROP CONSTRAINT FK__Booking_T__custo__628FA481
-
- ALTER TABLE Booking
- DROP CONSTRAINT FK__Booking_T__event__6383C8BA
-
  INSERT INTO Booking 
  VALUES
 	(1, 1, 1, 2, 90.00, '2025-03-25'),
@@ -36,25 +30,20 @@ VALUES
 	(9, 9, 9, 10, 350.00, '2025-04-03'),
 	(10, 10, 10, 5, 100.00, '2025-04-04');
 
-ALTER TABLE Booking
-ADD CONSTRAINT fk_cus FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
-
-ALTER TABLE Booking
-ADD CONSTRAINT fk_eve FOREIGN KEY (event_id) REFERENCES Event(event_id)
 --customer table
 
 INSERT INTO Customers
 VALUES
-(1, 'Ajith Kumar', 'thala@example.com', '9865551234', 5),
-(2, 'Joesph Vijay', 'tvkvijay@example.com', '7845552345', 4),
-(3, 'Mohan Ravi', 'jayamravi@example.com', '9665553456', 3),
-(4, 'Dhanush', 'dkraja@example.com', '9995554567', 2),
-(5, 'Suriya', 'suriya@example.com', '9475555678', 1),
-(6, 'Karthick', 'dili@example.com', '9265556789', 10),
-(7, 'Vimal', 'supremestar@example.com', '9365557890', 9),
-(8, 'Prithiv Raj', 'goatlife@example.com', '8305558901', 8),
-(9, 'Pream', 'pream@example.com', '9875559012', 7),
-(10, 'RajiniKanth', 'eagle@example.com', '6875550123',6);
+	(1, 'Ajith Kumar', 'thala@example.com', '9865551234', 5),
+	(2, 'Joesph Vijay', 'tvkvijay@example.com', '7845552345', 4),
+	(3, 'Mohan Ravi', 'jayamravi@example.com', '9665553456', 3),
+	(4, 'Dhanush', 'dkraja@example.com', '9995554567', 2),
+	(5, 'Suriya', 'suriya@example.com', '9475555678', 1),
+	(6, 'Karthick', 'dili@example.com', '9265556789', 10),
+	(7, 'Vimal', 'supremestar@example.com', '9365557890', 9),
+	(8, 'Prithiv Raj', 'goatlife@example.com', '8305558901', 8),
+	(9, 'Pream', 'pream@example.com', '9875559012', 7),
+	(10, 'RajiniKanth', 'eagle@example.com', '6875550123',6);
 
 --event table
 INSERT INTO Event 
@@ -70,16 +59,11 @@ VALUES
 	(9, 'Cricket Game', '2025-05-15', '15:00', 6, 12000, 12000, 35.00, 'Sports', 3),
 	(10, 'Pongal Festival', '2025-06-15', '12:00', 10, 2000, 2000, 20.00, 'Concert', 2);
 
-SELECT * FROM Venu 
-SELECT * FROM Event 
-SELECT * FROM Customers 
-SELECT * FROM Booking 
-
 --2. Write a SQL query to list all Events
 SELECT DISTINCT(event_name) AS Events FROM Event 
 
 --3. Write a SQL query to select events with available tickets.
-SELECT event_name FROM Event 
+SELECT event_name AS available_tickets FROM Event 
 WHERE available_seats >= 1
 
 --4. Write a SQL query to select events name partial match with 'cup'
@@ -95,11 +79,11 @@ SELECT event_name, event_date FROM Event
 WHERE event_date BETWEEN '2025-04-01' AND '2025-04-30'
 
 --7. Write a SQL Query to retrieve events with available tickets that also have 'Concert' in their name.
-SELECT event_name, available_seats FROM Event
+SELECT event_name AS Concert_Events, available_seats FROM Event
 WHERE event_type = 'Concert'
 
 --8. Write a SQL query to retrieve users in batches of 5, starting from the 6th user
-SELECT customer_name FROM Customers 
+SELECT customer_name AS Batch_Users FROM Customers 
 ORDER BY customer_id ASC 
 OFFSET 5 ROWS FETCH NEXT 5 ROWS ONLY 
 
@@ -112,9 +96,9 @@ SELECT * FROM Customers
 WHERE phone_number LIKE '%000'
 
 --11. Write a SQL query to retrieve the events in order whose seat capacity more than 15000.
-SELECT event_name FROM Event 
+SELECT event_name AS Events FROM Event 
 WHERE total_seats > 15000
 
 --12. Write a SQL query to select events name not start with 'x', 'y', 'z'.
-SELECT event_name FROM Event
+SELECT event_name AS Events FROM Event
 WHERE event_name NOT LIKE 'x%' OR event_name NOT LIKE 'y%' OR event_name NOT LIKE 'z%'
