@@ -13,3 +13,4 @@ SET dob = '2003-11-26'
 UPDATE students_demo
 SET dob = '2003-12-26'
 WHERE name IN ('Tharun') OR name LIKE 'B____'
+
