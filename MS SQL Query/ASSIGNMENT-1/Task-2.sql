@@ -80,7 +80,7 @@ WHERE event_date BETWEEN '2025-04-01' AND '2025-04-30'
 
 --7. Write a SQL Query to retrieve events with available tickets that also have 'Concert' in their name.
 SELECT event_name AS Concert_Events, available_seats FROM Event
-WHERE event_type = 'Concert'
+WHERE event_type = 'Concert' AND available_seats >= 1
 
 --8. Write a SQL query to retrieve users in batches of 5, starting from the 6th user
 SELECT customer_name AS Batch_Users FROM Customers 
@@ -102,3 +102,4 @@ WHERE total_seats > 15000
 --12. Write a SQL query to select events name not start with 'x', 'y', 'z'.
 SELECT event_name AS Events FROM Event
 WHERE event_name NOT LIKE 'x%' OR event_name NOT LIKE 'y%' OR event_name NOT LIKE 'z%'
+
