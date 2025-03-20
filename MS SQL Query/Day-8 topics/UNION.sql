@@ -1,0 +1,12 @@
+SELECT eid FROM emp e
+UNION ALL SELECT eid FROM salary s
+
+SELECT eid FROM emp 
+INTERSECT SELECT eid FROM salary 
+
+SELECT eid FROM salary
+EXCEPT SELECT eid FROM emp
+
+SELECT * FROM emp
+SELECT * FROM salary
+
