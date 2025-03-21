@@ -63,7 +63,7 @@ ORDER BY revenue
 
 --11. Write a SQL query to list users who have booked tickets for multiple events
 SELECT c.customer_name, COUNT(b.customer_id) AS events_booked FROM Booking b
-RIGHT JOIN Customers c ON 
+INNER JOIN Customers c ON 
 b.customer_id = c.customer_id
 GROUP BY c.customer_name
 HAVING COUNT(b.customer_id) >= 2
@@ -85,8 +85,8 @@ GROUP BY e.event_type, v.venue_name, e.event_name
 ORDER BY average DESC 
 
 --14. Write a SQL query to list users and the total number of tickets they've purchased in the last 30 days.
-SELECT c.customer_name, SUM(b.num_tickets) FROM Booking b
+SELECT c.customer_name, SUM(b.num_tickets) AS tickets_booked FROM Booking b
 INNER JOIN Customers c 
 ON b.booking_id = c.booking_id
+WHERE DATEDIFF(DAY, b.booking_date, GETDATE()) <= 30
 GROUP BY c.customer_name
-HAVING DATEDIFF('DAY', b.booking_date, getdate())

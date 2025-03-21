@@ -101,5 +101,7 @@ WHERE total_seats > 15000
 
 --12. Write a SQL query to select events name not start with 'x', 'y', 'z'.
 SELECT event_name AS Events FROM Event
-WHERE event_name NOT LIKE 'x%' OR event_name NOT LIKE 'y%' OR event_name NOT LIKE 'z%'
+WHERE event_name NOT LIKE 'x%' 
+AND event_name NOT LIKE 'y%' 
+AND event_name NOT LIKE 'z%'
 
