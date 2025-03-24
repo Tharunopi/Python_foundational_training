@@ -17,7 +17,7 @@ SELECT event_id, SUM(num_tickets) AS tickets_sold,
 (SELECT e.total_seats FROM Event e WHERE e.event_id = b.event_id) 
 AS total FROM booking b
 GROUP BY event_id
-HAVING SUM(num_tickets) <= (SELECT total_seats/2 AS num_tickets FROM Event e
+HAVING SUM(num_tickets) > (SELECT total_seats/2 AS num_tickets FROM Event e
 							WHERE e.event_id = b.event_id)
 
 --3. Calculate the Total Number of Tickets Sold for Each Event.
@@ -29,7 +29,7 @@ GROUP BY b.event_id
 --4. Find Users Who Have Not Booked Any Tickets Using a NOT EXISTS Subquery.
 SELECT * FROM Customers c
 WHERE NOT EXISTS (SELECT 1 FROM Booking b
-			  WHERE b.booking_id = c.booking_id)
+			  WHERE b.customer_id = c.customer_id)
 
 --5. List Events with No Ticket Sales Using a NOT IN Subquery.
 SELECT event_name FROM Event e

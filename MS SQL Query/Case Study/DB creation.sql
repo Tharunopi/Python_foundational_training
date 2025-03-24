@@ -1,0 +1,1 @@
+CREATE DATABASE Car_rental_application
