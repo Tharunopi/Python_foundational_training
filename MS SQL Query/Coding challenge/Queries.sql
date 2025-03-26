@@ -51,7 +51,7 @@ INNER JOIN Artworks a1 ON a.ArtistID = a1.ArtistID
 WHERE a.Nationality = 'Spanish'
 
 --10. List exhibitions that feature artwork by both Vincent van Gogh and Leonardo da Vinci.
-SELECT e.Title FROM Exhibitions e
+SELECT * FROM Exhibitions e
 INNER JOIN ExhibitionArtworks ea1 ON e.ExhibitionID = ea1.ExhibitionID
 INNER JOIN Artworks a1 ON ea1.ArtworkID = a1.ArtworkID
 INNER JOIN Artists ar1 ON a1.ArtistID = ar1.ArtistID

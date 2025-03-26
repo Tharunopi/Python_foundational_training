@@ -40,7 +40,7 @@ CREATE TABLE Exhibitions (
 CREATE TABLE ExhibitionArtworks (
  ExhibitionID INT,
  ArtworkID INT,
- PRIMARY KEY (ExhibitionID),
+ PRIMARY KEY (ExhibitionID, ArtworkID),
  FOREIGN KEY (ExhibitionID) REFERENCES Exhibitions (ExhibitionID),
  FOREIGN KEY (ArtworkID) REFERENCES Artworks (ArtworkID)
  )
