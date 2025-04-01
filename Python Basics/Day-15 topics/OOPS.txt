@@ -1,0 +1,6 @@
+class 
+object 
+inheritance -> singlee, multiple, multi-level, hybrid
+polymorphism -> method overriding, method overloading(not supported in python), operator overloading, duck typing
+interface -> not supported in python
+abstract 
