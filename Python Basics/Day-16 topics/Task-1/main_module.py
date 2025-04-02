@@ -49,10 +49,10 @@ class Menu:
         query = "INSERT INTO product VALUES (?, ?, ?, ?)"
         one_way_command(self.conn, query, values)
 
-    def Order_product(self, oid, date, cid, pid, qty):
+    def Order_product(self, oid, cid, pid, qty):
         product_price = two_way_command(self.conn, f"SELECT price FROM product WHERE pid = {pid}")
         price = product_price[0][0]
-        new_order = order(oid, date, cid, pid, qty, price)
+        new_order = order(oid, cid, pid, qty, price)
         values = new_order.make_order()
         query = "INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?)"
         one_way_command(self.conn, query, values)
@@ -65,8 +65,46 @@ class Menu:
             print(f"{i.oid}  {i.date}  {i.cid} {i.pid}  {i.qty}  {i.price}  {i.total_amount}")
         print("------------------------------------------")
 
+    def display_order_id(self):
+        query = "SELECT TOP 1 oid FROM orders ORDER BY oid DESC"
+        result = two_way_command(self.conn, query)
+        print(f"Last order ID - {result[0][0]}")
+
+    def display_customer_records(self):
+        query = """SELECT c.cid, c.cname, sum(total_amount) AS sum_total FROM orders o
+                INNER JOIN customer c
+                ON c.cid = o.cid
+                GROUP BY c.cid, c.cname"""
+        result = two_way_command(self.conn, query)
+        print("------------------------------")
+        for i in result:
+            print(f"{i.cid}  {i.cname}  {i.sum_total}")
+        print("------------------------------")
+
 m1 = Menu()
-# m1.Add_customer(1, "Tharun", "KGM", "9360496526")
-# m1.Add_product(1, "mobile", "working fine", 9666)
-# m1.Order_product(1, "2025", 1, 1, 2)
-m1.display_all_order()
+status = "Online"
+operations = ["1. Add customer", "2. Add product", "3. Add order", "4. Display all order", "5. Display order ID", "6. Display customer details", "7. Exit"]
+for i in operations:
+    print(i)
+
+while status == "Online":
+    response = int(input("Enter operations to perform: "))
+
+    if response == 1:
+        m1.Add_customer(cid=int(input("Enter CID: ")), cname=input("Enter Name: "), address=input("Enter Location: "), mob=input("Enter number: "))
+    elif response == 2:
+        m1.Add_product(pid=int(input("Enter PID: ")), pname=input("Enter Product name: "), desc=input("Enter Description: "), price=int(input("Enter price: ")))
+    elif response == 3:
+        m1.Order_product(oid=int(input("Enter OrderID: ")), cid=int(input("Enter CustomerID: ")), pid=int(input("Enter ProductID: ")), qty=int(input("Enter Quantity: ")))
+    elif response == 4:
+        m1.display_all_order()
+    elif response == 5:
+        m1.display_order_id()
+    elif response == 6:
+        m1.display_customer_records()
+    elif response == 7:
+        status = "Offline"
+        print("Logged Out!!")
+    else:
+        print("Invalid response!!")
+        break

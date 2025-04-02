@@ -1,7 +1,10 @@
+import datetime
+
 class order:
-    def __init__(self, oid, date, cid, pid, qty, price):
+    def __init__(self, oid, cid, pid, qty, price):
         self.oid = oid
-        self.date = date
+        now = datetime.datetime.now()
+        self.date = now.strftime("%d-%m-%Y")
         self.cid = cid
         self.pid = pid
         self.qty = qty
