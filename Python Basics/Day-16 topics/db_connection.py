@@ -12,24 +12,39 @@ class dbConnection:
         except pyodbc.Error as e:
             print("Error in connection: ", e)
 
-    def one_way_command(self, query, values):
-        cur = self.conn.cursor()
-
+    def one_way_command(self, query):
         try:
-            cur.execute(query, values)
+            cur = self.conn.cursor()
+            cur.execute(query)
+            cur.commit()
+            cur.close()
+            print("Query executed")
+
         except pyodbc.Error as e:
             print(e)
 
-        cur.commit()
-        cur.close()
-        print("Query executed")
-    
+    def two_way_command(self, query):
+        try:
+            cur = self.conn.cursor()
+            cur.execute(query)
+            result = cur.fetchall()
+            cur.close()
+            self.show(result)
+            return result
+        
+        except pyodbc.Error as e:
+            print(e)
+
+    def show(self, result):
+        if len(result) > 1:
+            for i in result:
+                print(i)
+
     def close(self):
         self.conn.close()
         
 
 db = dbConnection()
-query = "UPDATE anime set anime_mc = ? WHERE anime_id = ?"
-values = ('shidra', 4)
-db.one_way_command(query, values)
+query = input("Enter query: ")
+lis = db.two_way_command(query)
 db.close()
