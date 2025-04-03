@@ -1,0 +1,28 @@
+Subject: Revised Manuscript Submission – AI-Driven Ultrasound Fencing
+
+Dear [Editor’s Name],
+
+I hope this email finds you well.
+
+I sincerely appreciate your feedback regarding our manuscript titled "AI-Driven Ultrasound Fencing" and understand the concerns raised regarding its scientific merit and AI-generated content. Based on your suggestions, we have made significant revisions to enhance the technical depth, include additional experimental results, and ensure a more rigorous scientific approach.
+
+The key improvements in our revised submission include:
+
+A more detailed explanation of our YOLOv11 implementation, dataset preparation, and model performance.
+
+Additional hardware specifications and system architecture details.
+
+Inclusion of real-world experimental results, performance analysis, and comparisons with existing solutions.
+
+Strengthened methodology section with improved technical rigor.
+
+More peer-reviewed references to enhance credibility.
+
+We believe that these enhancements significantly improve the manuscript’s quality and address the concerns raised in the initial review. We kindly request you to consider our revised submission for further processing.
+
+Please find the revised manuscript attached for your review. We look forward to your feedback and the opportunity to contribute to your esteemed journal.
+
+Best regards,
+[Your Full Name]
+[Your Institution/Organization]
+[Your Contact Information]
