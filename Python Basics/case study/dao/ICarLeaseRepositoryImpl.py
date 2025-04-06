@@ -28,7 +28,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def removeCar(self, carID):
         cur = self.connection.cursor()
 
-        query = f"DELETE FROM Vechile_Table WHERE vehicleID = {carID}"
+        query = f"DELETE FROM Vechile_Table WHERE vechileID = {carID}"
 
         cur.execute(query)
         self.connection.commit()
@@ -37,7 +37,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def listAvailableCars(self):
         cur = self.connection.cursor()
 
-        query = "SELECT vehicleID from Lease_Table WHERE CONVERT(DATE, GETDATE()) > endDate"
+        query = "SELECT vechileID from Lease_Table WHERE CONVERT(DATE, GETDATE()) > endDate"
 
         cur.execute(query)
         result = cur.fetchall()      
@@ -47,7 +47,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def  listRentedCars(self):
         cur = self.connection.cursor()
 
-        query = "SELECT vehicleID FROM Lease_Table WHERE CONVERT(DATE, GETDATE()) BETWEEN startDate AND endDate"
+        query = "SELECT vechileID FROM Lease_Table WHERE CONVERT(DATE, GETDATE()) BETWEEN startDate AND endDate"
         
         cur.execute(query)
         result = cur.fetchall()
@@ -57,7 +57,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def findCarById(self, carID):
         cur = self.connection.cursor()
 
-        query = f"SELECT * FROM Vechile_Table WHERE vehicleID = {carID}"
+        query = f"SELECT * FROM Vechile_Table WHERE vechileID = {carID}"
 
         cur.execute(query)
         result = cur.fetchall()
@@ -100,7 +100,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         query = f"SELECT * FROM Customer_Table WHERE customerID = {customerID}"
 
         cur.execute(query)
-        result = cur.fetchall()
+        result = cur.fetchall()[0]
         customer = Customer(result[0], result[1], result[2], result[3], result[4])
         return customer
     
@@ -108,18 +108,17 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def createLease(self, customerID, carID, startDate, endDate):
         cur = self.connection.cursor()
 
-        leaseID_query = "SELECT TOP 1 leaseID FROM Lease_Table ORDER BY leaseID DESC"
-
-        cur.execute(leaseID_query)
-        leaseID = cur.fetchone()
-
+        type = "MonthlyLease" # work it up later
         query_1 = "INSERT INTO Lease_Table VALUES (?, ?, ?, ?, ?)"
-        values = (leaseID+1, carID, customerID, startDate, endDate, None) # make sure that lease id is auto incremented
+        values = (carID, customerID, startDate, endDate, type) # make sure that lease id is auto incremented
 
         cur.execute(query_1, values)
         self.connection.commit()
+        query_2 = 'SELECT SCOPE_IDENTITY()'
+        cur.execute(query_2)
+        leaseID = cur.fetchone()
         cur.close()
-        return Lease(leaseID, carID, customerID, startDate, endDate, None)
+        return Lease(leaseID, carID, customerID, startDate, endDate, type)
     
     def returnCar(self, leaseID):
         cur = self.connection.cursor()
@@ -151,14 +150,13 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         cur.close()
         return result
     
+    # Payment Table
     def recordPayment(self, lease, amount):
         cur = self.connection.cursor()
 
-        query = "INSERT INTO Payment_Table VALUES (?, ?, CONVERT(DATE, GETDATE()), ?)"
-        values = (None, lease, amount)
+        query = "INSERT INTO Payment_Table VALUES (?, CONVERT(DATE, GETDATE()), ?)"
+        values = (lease.leaseID, amount)
 
         cur.execute(query, values)
         self.connection.commit()
         cur.close()
-
-car = ICarLeaseRepositoryImpl()

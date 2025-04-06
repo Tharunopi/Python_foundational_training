@@ -1,6 +1,6 @@
 driver = 'ODBC Driver 17 for SQL Server'
 server = 'THARUN\SQLEXPRESS'
-database = 'demo_assignment'
+database = 'Car_rental_application'
 trusted_connection = 'yes'
 
 class PropertyUtil:
