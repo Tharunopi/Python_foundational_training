@@ -1,4 +1,4 @@
-from PropertyUtil import PropertyUtil
+from util.PropertyUtil import PropertyUtil
 import pyodbc
 
 class DBConnection:
