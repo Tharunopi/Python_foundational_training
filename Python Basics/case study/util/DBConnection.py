@@ -6,3 +6,5 @@ class DBConnection:
     def getConnection():
         connectionString = PropertyUtil.getPropertyString()
         return pyodbc.connect(connectionString)
+    
+    
