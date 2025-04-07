@@ -27,12 +27,13 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
 
     def removeCar(self, carID):
         cur = self.connection.cursor()
-
+        
         query = f"DELETE FROM Vechile_Table WHERE vechileID = {carID}"
 
         cur.execute(query)
         self.connection.commit()
         cur.close()
+            
 
     def listAvailableCars(self):
         cur = self.connection.cursor()
@@ -54,7 +55,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         cur.close()
         return result
     
-    def findCarById(self, carID):
+    def findCarById(self, carID):       
         cur = self.connection.cursor()
 
         query = f"SELECT * FROM Vechile_Table WHERE vechileID = {carID}"
@@ -63,6 +64,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         result = cur.fetchall()
         cur.close()
         return result
+
     
     # Customer Management
     def addCustomer(self, customer):
@@ -82,6 +84,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
 
         cur.execute(query)
         self.connection.commit()
+
         cur.close()
 
     def listCustomers(self):
