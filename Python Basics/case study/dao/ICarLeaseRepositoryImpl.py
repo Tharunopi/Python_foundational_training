@@ -1,4 +1,5 @@
 import sys, pyodbc
+from datetime import datetime
 
 sys.path.append(r"C:\Stack overflow\Python_foundational_training\Python Basics\case study")
 
@@ -38,7 +39,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def listAvailableCars(self):
         cur = self.connection.cursor()
 
-        query = "SELECT vechileID from Lease_Table WHERE CONVERT(DATE, GETDATE()) > endDate"
+        query = "SELECT * from Vechile_Table WHERE status = 'available'"
 
         cur.execute(query)
         result = cur.fetchall()      
@@ -48,7 +49,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def  listRentedCars(self):
         cur = self.connection.cursor()
 
-        query = "SELECT vechileID FROM Lease_Table WHERE CONVERT(DATE, GETDATE()) BETWEEN startDate AND endDate"
+        query = "SELECT * from Vechile_Table WHERE status = 'notAvailable'"
         
         cur.execute(query)
         result = cur.fetchall()
@@ -63,7 +64,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         cur.execute(query)
         result = cur.fetchall()
         cur.close()
-        return result
+        return result[0]
 
     
     # Customer Management
@@ -111,17 +112,28 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def createLease(self, customerID, carID, startDate, endDate):
         cur = self.connection.cursor()
 
-        type = "MonthlyLease" # work it up later
+        date_1 = datetime.strptime(startDate, "%Y-%m-%d").date()
+        date_2 = datetime.strptime(endDate, "%Y-%m-%d").date()
+        difference = date_2 - date_1
+
+        if difference.days >= 30:
+            type = "MonthlyLease"
+        else:
+            type = "DailyLease"
+            
         query_1 = "INSERT INTO Lease_Table VALUES (?, ?, ?, ?, ?)"
-        values = (carID, customerID, startDate, endDate, type) # make sure that lease id is auto incremented
+        values = (carID, customerID, startDate, endDate, type) 
 
         cur.execute(query_1, values)
         self.connection.commit()
-        query_2 = 'SELECT SCOPE_IDENTITY()'
+        query_2 = 'SELECT TOP 1 leaseID FROM Lease_Table ORDER BY leaseID DESC'
         cur.execute(query_2)
-        leaseID = cur.fetchone()
+        leaseID = cur.fetchone()[0]
+        query_3 = f"UPDATE Vechile_Table SET status = 'notAvailable' WHERE vechileID = {carID}"
+        cur.execute(query_3)
+        cur.commit()
         cur.close()
-        return Lease(leaseID, carID, customerID, startDate, endDate, type)
+        return Lease(leaseID=leaseID, vehicleID=carID, customerID=customerID, startDate=startDate, endDate=endDate, type=type)
     
     def returnCar(self, leaseID):
         cur = self.connection.cursor()
