@@ -7,4 +7,3 @@ class DBConnection:
         connectionString = PropertyUtil.getPropertyString()
         return pyodbc.connect(connectionString)
     
-    
