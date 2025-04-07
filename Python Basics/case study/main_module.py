@@ -72,6 +72,7 @@ def main():
                             raise CarNotFoundException
                         
                         repository.removeCar(carID)
+                        cur.close()
 
                     except CarNotFoundException as e:
                         print(e)
@@ -86,9 +87,9 @@ def main():
                         WHERE CONVERT(DATE, GETDATE()) > l.endDate)"""
                     cur.execute(query)
                     conn.commit()
-
                     avaliableCars = repository.listAvailableCars()
                     print(avaliableCars)
+                    cur.close()
 
                 elif operation == 4:
                     cur = conn.cursor()
@@ -102,6 +103,7 @@ def main():
                     conn.commit()
                     rentedCars = repository.listRentedCars()
                     print(rentedCars)
+                    cur.close()
 
                 elif operation == 5:
                     try:
@@ -116,6 +118,7 @@ def main():
                         
                         result = repository.findCarById(carID)
                         print(result)
+                        cur.close()
 
                     except CarNotFoundException as e:
                         print(e)
@@ -163,6 +166,7 @@ def main():
                             raise CustomerNotFoundException
                         
                         repository.removeCustomer(customerID)
+                        cur.close()
 
                     except CustomerNotFoundException as e:
                         print(e)
@@ -179,13 +183,14 @@ def main():
                         query = "SELECT customerID FROM Customer_Table"
 
                         cur.execute(query)
-                        customersID = cur.fetchall()
+                        customersID = cur.fetchall()                       
 
                         if not any(customerID in i for i in customersID):
                             raise CustomerNotFoundException
                         
                         customerz = repository.findCustomerById(customerID)
                         print(f"{customerz.customerID}, {customerz.firstName}, {customerz.lastName}, {customerz.email}, {customerz.phoneNumber}")
+                        cur.close()
 
                     except CustomerNotFoundException as e:
                         print(e)
@@ -233,6 +238,8 @@ def main():
                         lease = repository.createLease(customerID=customerID, carID=carID, startDate=startDate, endDate=endDate)
                         print(f"{lease.leaseID}, {lease.customerID}, {lease.vehicleID}, {lease.startDate}, {lease.endDate}, {lease.type}")
 
+                        cur.close()
+
                     except CarNotFoundException as e:
                         print(e)
 
@@ -253,6 +260,7 @@ def main():
                         
                         leaseInfo = repository.returnCar(leaseID)
                         print(leaseInfo)
+                        cur.close()
 
                     except LeaseNotFoundException as e:
                         print(e)
@@ -306,6 +314,7 @@ def main():
 
                         lease = Lease(leaseID, carID, customerID, startDate, endDate, type)
                         repository.recordPayment(lease, amount)
+                        cur.close()
 
                     except LeaseNotFoundException as e:
                         print(e)
