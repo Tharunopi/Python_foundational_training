@@ -17,54 +17,76 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
 
     # Car Management
     def addCar(self, car):
-        cur = self.connection.cursor()
+        try:
+            cur = self.connection.cursor()
 
-        query = "INSERT INTO Vechile_Table Values (?, ?, ?, ?, ?, ?, ?, ?)"
-        values = (car.vechiceID, car.make, car.model, car.year, car.daiyRate, car.status, car.passengerCapacity, car.engineCapacity)
+            query = "INSERT INTO Vechile_Table Values (?, ?, ?, ?, ?, ?, ?, ?)"
+            values = (car.vechiceID, car.make, car.model, car.year, car.daiyRate, car.status, car.passengerCapacity, car.engineCapacity)
 
-        cur.execute(query, values)
-        self.connection.commit()
-        cur.close()
+            cur.execute(query, values)
+            self.connection.commit()
+            cur.close()
+            return True
+        
+        except Exception as e:
+            print(f"Error Adding Car : {e}")
 
     def removeCar(self, carID):
-        cur = self.connection.cursor()
-        
-        query = f"DELETE FROM Vechile_Table WHERE vechileID = {carID}"
+        try:
+            cur = self.connection.cursor()
+            
+            query = f"DELETE FROM Vechile_Table WHERE vechileID = {carID}"
 
-        cur.execute(query)
-        self.connection.commit()
-        cur.close()
+            cur.execute(query)
+            self.connection.commit()
+            cur.close()
+            return True
+        
+        except Exception as e:
+            print(f"Error Removeing Car : {e}")
             
 
     def listAvailableCars(self):
-        cur = self.connection.cursor()
+        try:
+            cur = self.connection.cursor()
 
-        query = "SELECT * from Vechile_Table WHERE status = 'available'"
+            query = "SELECT * from Vechile_Table WHERE status = 'available'"
 
-        cur.execute(query)
-        result = cur.fetchall()      
-        cur.close()
-        return result
+            cur.execute(query)
+            result = cur.fetchall()      
+            cur.close()
+            return result
+        
+        except Exception as e:
+            print(f"Error Listing Available Cars : {e}")
 
     def  listRentedCars(self):
-        cur = self.connection.cursor()
+        try:
+            cur = self.connection.cursor()
 
-        query = "SELECT * from Vechile_Table WHERE status = 'notAvailable'"
+            query = "SELECT * from Vechile_Table WHERE status = 'notAvailable'"
+            
+            cur.execute(query)
+            result = cur.fetchall()
+            cur.close()
+            return result
         
-        cur.execute(query)
-        result = cur.fetchall()
-        cur.close()
-        return result
+        except Exception as e:
+            print(f"Error Listing Rented Cars : {e}")
     
-    def findCarById(self, carID):       
-        cur = self.connection.cursor()
+    def findCarById(self, carID):     
+        try:  
+            cur = self.connection.cursor()
 
-        query = f"SELECT * FROM Vechile_Table WHERE vechileID = {carID}"
+            query = f"SELECT * FROM Vechile_Table WHERE vechileID = {carID}"
 
-        cur.execute(query)
-        result = cur.fetchall()
-        cur.close()
-        return result[0]
+            cur.execute(query)
+            result = cur.fetchall()
+            cur.close()
+            return result[0]
+        
+        except Exception as e:
+            print(f"Error Finding Car : {e}")
 
     
     # Customer Management
@@ -77,6 +99,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         cur.execute(query, values)
         self.connection.commit()
         cur.close()
+        return True
 
     def removeCustomer(self, customerID):
         cur = self.connection.cursor()
@@ -87,6 +110,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         self.connection.commit()
 
         cur.close()
+        return True
 
     def listCustomers(self):
         cur = self.connection.cursor()
@@ -133,7 +157,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         cur.execute(query_3)
         cur.commit()
         cur.close()
-        return Lease(leaseID=leaseID, vehicleID=carID, customerID=customerID, startDate=startDate, endDate=endDate, type=type)
+        return True
     
     def returnCar(self, leaseID):
         cur = self.connection.cursor()
@@ -175,3 +199,4 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         cur.execute(query, values)
         self.connection.commit()
         cur.close()
+        return True
