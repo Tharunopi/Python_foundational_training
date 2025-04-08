@@ -10,6 +10,9 @@ from entity.payment import Payment
 from entity.vechicle import Vechicle
 from util.PropertyUtil import PropertyUtil
 from util.DBConnection import DBConnection
+from exception.CarNotFoundException import CarNotFoundException
+from exception.CustomerNotFoundException import CustomerNotFoundException
+from exception.LeaseNotFoundException import LeaseNotFoundException
 
 class ICarLeaseRepositoryImpl(ICarLeaseRepository):
     def __init__(self):
@@ -83,8 +86,13 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
             cur.execute(query)
             result = cur.fetchall()
             cur.close()
+            if not result:
+                raise CarNotFoundException
             return result[0]
         
+        except CarNotFoundException:
+            raise
+
         except Exception as e:
             print(f"Error Finding Car : {e}")
 
@@ -141,10 +149,19 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
             query = f"SELECT * FROM Customer_Table WHERE customerID = {customerID}"
 
             cur.execute(query)
-            result = cur.fetchall()[0]
+            result = cur.fetchall()
+
+            if not result:
+                raise CustomerNotFoundException
+            
+            result = result[0]
             customer = Customer(result[0], result[1], result[2], result[3], result[4])
+            
             return customer
         
+        except CustomerNotFoundException:
+            raise
+
         except Exception as e:
             print(f"Error Finding Customer by ID : {e}")
     
@@ -183,13 +200,23 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         try:
             cur = self.connection.cursor()
 
-            query = f"SELECT * FROM Lease_Table WHERE leaseID = {leaseID}"
+            query = f"""SELECT l.vechileID, v.make, v.model, v.year, v.dailyRate, v.status, v.passengerCapacity, v.engineCapacity FROM Lease_Table l
+            INNER JOIN Vechile_Table v
+            ON v.vechileID = l.vechileID
+            WHERE leaseID = {leaseID}"""
 
             cur.execute(query)
-            result = cur.fetchall()
+            result = cur.fetchone()
             cur.close()
+
+            if not result:
+                raise LeaseNotFoundException
+
             return result
         
+        except LeaseNotFoundException:
+            raise
+
         except Exception as e:
             print(f"Error Returning Car : {e}")
     
@@ -197,7 +224,7 @@ class ICarLeaseRepositoryImpl(ICarLeaseRepository):
         try:
             cur = self.connection.cursor()
 
-            query = "SELECT leaseID from Lease_Table WHERE CONVERT(DATE, GETDATE()) BETWEEN startDate AND endDate"
+            query = "SELECT * from Lease_Table WHERE CONVERT(DATE, GETDATE()) BETWEEN startDate AND endDate"
 
             cur.execute(query)
             result = cur.fetchall()

@@ -19,7 +19,7 @@ def main():
     repository = ICarLeaseRepositoryImpl()
 
     while True:
-        print("\n\t\t\t\t\tCar Rental Application")
+        print("\n\t\t\t\t\tCar Rental System")
         print("1. Car Management")
         print("2. Customer Management")
         print("3. Lease Management")
@@ -48,17 +48,22 @@ def main():
                     continue
 
                 if operation == 1:
-                    carID = int(input("Enter carID: "))
-                    make = input("Enter make: ")
-                    model = input("Enter car model: ")
-                    year = str(input("Enter year: "))
-                    dailyRate = float(input("Enter Daiy Rate: "))
-                    status = input("Enter Status(available / notAvailable): ")
-                    passengerCapacity = int(input("Enter Passenger Capacity: "))
-                    engineCapacity = float(input("Enter Engine Capacity: "))
+                    try:
+                        carID = int(input("Enter carID: "))
+                        make = input("Enter make: ")
+                        model = input("Enter car model: ")
+                        year = str(input("Enter year: "))
+                        dailyRate = float(input("Enter Daiy Rate: "))
+                        status = input("Enter Status(available / notAvailable): ")
+                        passengerCapacity = int(input("Enter Passenger Capacity: "))
+                        engineCapacity = float(input("Enter Engine Capacity: "))
 
-                    car = Vechicle(vechiceID=carID, make=make, model=model, year=year, dailyRate=dailyRate, status=status, passengerCapacity=passengerCapacity, engineCapacity=engineCapacity)
-                    repository.addCar(car)
+                        car = Vechicle(vechiceID=carID, make=make, model=model, year=year, dailyRate=dailyRate, status=status, passengerCapacity=passengerCapacity, engineCapacity=engineCapacity)
+                        if repository.addCar(car):
+                            print("Car Added Successfully.")
+                    
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 elif operation == 2:
                     try:
@@ -71,39 +76,64 @@ def main():
                         if not any(carID in i for i in carsID):
                             raise CarNotFoundException
                         
-                        repository.removeCar(carID)
+                        if repository.removeCar(carID):
+                            print("Car Removed Successfully.")
+
                         cur.close()
 
                     except CarNotFoundException as e:
                         print(e)
 
+                    except Exception as e:
+                        print("Error : {e}")
+
                 elif operation == 3:
-                    cur = conn.cursor()
-                    query = """UPDATE Vechile_Table 
-                    SET status = 'available' 
-                    WHERE vechileID IN (SELECT v.vechileID FROM Vechile_Table v 
-                        INNER JOIN Lease_Table l
-                        ON l.vechileID = v.vechileID 
-                        WHERE CONVERT(DATE, GETDATE()) > l.endDate)"""
-                    cur.execute(query)
-                    conn.commit()
-                    avaliableCars = repository.listAvailableCars()
-                    print(avaliableCars)
-                    cur.close()
+                    try:
+                        cur = conn.cursor()
+                        query = """UPDATE Vechile_Table 
+                        SET status = 'available' 
+                        WHERE vechileID IN (SELECT v.vechileID FROM Vechile_Table v 
+                            INNER JOIN Lease_Table l
+                            ON l.vechileID = v.vechileID 
+                            WHERE CONVERT(DATE, GETDATE()) > l.endDate)"""
+                        cur.execute(query)
+                        conn.commit()
+                        avaliableCars = repository.listAvailableCars()
+
+                        if not avaliableCars:
+                            print("No Available Cars Found.")
+                        else:
+                            for i in avaliableCars:
+                                print(f"ID: {i[0]}, Make: {i[1]}, Model: {i[2]}, Year: {i[3]}, DailyRate: {i[4]}, Status: {i[5]}, PassengerCapacity: {i[6]}, EngineCapacity: {i[7]}ltr")
+
+                        cur.close()
+
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 elif operation == 4:
-                    cur = conn.cursor()
-                    query = """UPDATE Vechile_Table 
-                    SET status = 'notAvailable' 
-                    WHERE vechileID IN (SELECT v.vechileID FROM Vechile_Table v 
-                        INNER JOIN Lease_Table l 
-                        ON l.vechileID = v.vechileID 
-                        WHERE CONVERT(DATE, GETDATE()) BETWEEN l.startDate AND l.endDate)"""
-                    cur.execute(query)
-                    conn.commit()
-                    rentedCars = repository.listRentedCars()
-                    print(rentedCars)
-                    cur.close()
+                    try:
+                        cur = conn.cursor()
+                        query = """UPDATE Vechile_Table 
+                        SET status = 'notAvailable' 
+                        WHERE vechileID IN (SELECT v.vechileID FROM Vechile_Table v 
+                            INNER JOIN Lease_Table l 
+                            ON l.vechileID = v.vechileID 
+                            WHERE CONVERT(DATE, GETDATE()) BETWEEN l.startDate AND l.endDate)"""
+                        cur.execute(query)
+                        conn.commit()
+                        rentedCars = repository.listRentedCars()
+
+                        if not rentedCars:
+                            print("No Rented Cars Found.")
+                        else:
+                            for i in rentedCars:
+                                print(f"ID: {i[0]}, Make: {i[1]}, Model: {i[2]}, Year: {i[3]}, DailyRate: {i[4]}, Status: {i[5]}, PassengerCapacity: {i[6]}, EngineCapacity: {i[7]}ltr")
+
+                        cur.close()
+
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 elif operation == 5:
                     try:
@@ -117,11 +147,14 @@ def main():
                             raise CarNotFoundException
                         
                         result = repository.findCarById(carID)
-                        print(result)
+                        print(f"ID: {result[0]}, Make: {result[1]}, Model: {result[2]}, Year: {result[3]}, DailyRate: {result[4]}, Status: {result[5]}, PassengerCapacity: {result[6]}, EngineCapacity: {result[7]}ltr")
                         cur.close()
 
                     except CarNotFoundException as e:
                         print(e)
+
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 else:
                     print("Exited from operations menu.")
@@ -142,15 +175,20 @@ def main():
                     continue
 
                 if operation == 1:
-                    customerID = int(input("Enter CustomerID: "))
-                    firstName = input("Enter First Name: ")
-                    lastName = input("Enter Last Name: ")
-                    email = input("Enter E-Mail: ")
-                    phoneNumber = input("Enter Phone Number: ")
+                    try:
+                        customerID = int(input("Enter CustomerID: "))
+                        firstName = input("Enter First Name: ")
+                        lastName = input("Enter Last Name: ")
+                        email = input("Enter E-Mail: ")
+                        phoneNumber = input("Enter Phone Number: ")
 
-                    customer = Customer(customerID, firstName, lastName, email, phoneNumber)
+                        customer = Customer(customerID, firstName, lastName, email, phoneNumber)
 
-                    repository.addCustomer(customer)
+                        if repository.addCustomer(customer):
+                            print("Customer Added Successfully.")
+
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 elif operation == 2:
                     try:
@@ -165,15 +203,29 @@ def main():
                         if not any(customerID in i for i in customersID):
                             raise CustomerNotFoundException
                         
-                        repository.removeCustomer(customerID)
+                        if repository.removeCustomer(customerID):
+                            print("Customer Removed Successfully.")
+
                         cur.close()
 
                     except CustomerNotFoundException as e:
                         print(e)
 
+                    except Exception as e:
+                        print(f"Error : {e}")
+
                 elif operation == 3:
-                    listCustomers = repository.listCustomers()
-                    print(listCustomers)
+                    try:
+                        listCustomers = repository.listCustomers()
+
+                        if not listCustomers:
+                            print("No Customer Found.")
+                        else:
+                            for i in listCustomers:
+                                print(f"ID: {i[0]}, FirstName: {i[1]}, LastName: {i[2]}, E-Mail: {i[3]}, MobileNumber: {i[4]}")
+
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 elif operation == 4:
                     try:
@@ -189,11 +241,14 @@ def main():
                             raise CustomerNotFoundException
                         
                         customerz = repository.findCustomerById(customerID)
-                        print(f"{customerz.customerID}, {customerz.firstName}, {customerz.lastName}, {customerz.email}, {customerz.phoneNumber}")
+                        print(f"ID: {customerz.customerID}, FirstName: {customerz.firstName}, LastName: {customerz.lastName}, E-Mail: {customerz.email}, PhoneNumber: {customerz.phoneNumber}")
                         cur.close()
 
                     except CustomerNotFoundException as e:
                         print(e)
+
+                    except Exception as e:
+                        print(f"Error : {e}")
                 
                 else:
                     print("Exited from operations menu.")
@@ -236,7 +291,8 @@ def main():
                         endDate = input("Enter End Date(YYYY-MM-DD): ")
 
                         lease = repository.createLease(customerID=customerID, carID=carID, startDate=startDate, endDate=endDate)
-                        print(f"{lease.leaseID}, {lease.customerID}, {lease.vehicleID}, {lease.startDate}, {lease.endDate}, {lease.type}")
+                        if lease:
+                            print("Lease Created Successfully.")
 
                         cur.close()
 
@@ -245,6 +301,9 @@ def main():
 
                     except CustomerNotFoundException as e:
                         print(e)
+
+                    except Exception as e:
+                        print(f"Error : e")
 
                 elif operation == 2:
                     try:
@@ -258,20 +317,39 @@ def main():
                         if not any(leaseID in i for i in leasesID):
                             raise LeaseNotFoundException
                         
-                        leaseInfo = repository.returnCar(leaseID)
-                        print(leaseInfo)
+                        leaseInfo = repository.returnCar(leaseID) 
+                        print(f"ID: {leaseInfo[0]}, Make: {leaseInfo[1]}, Model: {leaseInfo[2]}, Year: {leaseInfo[3]}, DailyRate: {leaseInfo[4]}, Status: {leaseInfo[5]}, PassengerCapacity: {leaseInfo[6]}, EngineCapacity: {leaseInfo[7]}")
                         cur.close()
 
                     except LeaseNotFoundException as e:
                         print(e)
 
+                    except Exception as e:
+                        print(f"Error : {e}")
+
                 elif operation == 3:
-                    activeLeases = repository.listActiveLeases()
-                    print(activeLeases)
+                    try:
+                        activeLeases = repository.listActiveLeases()
+                        if not activeLeases:
+                            print("No Active Leases Found.")
+                        else:
+                            for i in activeLeases:
+                                print(f"ID: {i[0]}, CustomerID: {i[1]}, CarID: {i[2]}, StartDate: {i[3]}, EndDate: {i[4]}, Type: {i[5]}")
+                    
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 elif operation == 4:
-                    leaseHistory = repository.listLeaseHistory()
-                    print(leaseHistory)
+                    try:
+                        leaseHistory = repository.listLeaseHistory()
+                        if not leaseHistory:
+                            print("No Lease History FOund.")
+                        else:
+                            for i in leaseHistory:
+                                print(f"ID: {i[0]}, CustomerID: {i[1]}, CarID: {i[2]}, StartDate: {i[3]}, EndDate: {i[4]}, Type: {i[5]}")
+
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 else:
                     print("Exited from operations menu.")
@@ -313,11 +391,17 @@ def main():
                         amount = float(input("Enter Amount: "))
 
                         lease = Lease(leaseID, carID, customerID, startDate, endDate, type)
-                        repository.recordPayment(lease, amount)
+
+                        if repository.recordPayment(lease, amount):
+                            print("Payment Recorded Successfully.")
+
                         cur.close()
 
                     except LeaseNotFoundException as e:
                         print(e)
+
+                    except Exception as e:
+                        print(f"Error : {e}")
 
                 else:
                     print("Exited from operations menu.")
