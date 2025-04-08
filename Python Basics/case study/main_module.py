@@ -34,7 +34,7 @@ def main():
 
         if choice == 1:
             while True:
-                print("/n--1. Add Car")
+                print("\n--1. Add Car")
                 print("--2. Remove Car")
                 print("--3. List Available Cars")
                 print("--4. List Rented Cars")
