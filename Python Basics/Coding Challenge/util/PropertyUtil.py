@@ -1,3 +1,6 @@
+import sys
+sys.path.append(r"C:\Stack overflow\Python_foundational_training\Python Basics\Coding Challenge")
+
 driver = 'ODBC Driver 17 for SQL Server'
 server = 'THARUN\SQLEXPRESS'
 database = 'OrderManagementSystem'

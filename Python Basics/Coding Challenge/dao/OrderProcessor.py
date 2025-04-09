@@ -1,4 +1,10 @@
+import sys
+sys.path.append(r"C:\Stack overflow\Python_foundational_training\Python Basics\Coding Challenge")
+
 from dao.IOrderManagementRepository import IOrderManagementRepository
+from exception.OrderNotFound import OrderNotFound
+from exception.UserNotFound import UserNotFound
+from exception.NotAnAdmin import NotAnAdmin
 
 from util.DBConnection import DBConnection
 
@@ -31,13 +37,13 @@ class OrderProcesor(IOrderManagementRepository):
             cur.execute(query_1)
             users = cur.fetchall()
             if not any(userId in i for i in users):
-                return False
+                raise UserNotFound
 
             query_3 = "SELECT orderId FROM Orders"
             cur.execute(query_3)
             orders = cur.fetchall()
             if not any(orderId in i for i in orders):
-                return False
+                raise OrderNotFound
            
             query_2 = f"DELETE FROM Orders WHERE orderId = {orderId}"
             cur.execute(query_2)
@@ -48,6 +54,12 @@ class OrderProcesor(IOrderManagementRepository):
         except Exception as e:
             print(f"Error : {e}")
 
+        except UserNotFound as e:
+            print(e)
+        
+        except OrderNotFound as e:
+            print(e)
+
     def createProduct(self, user, product):
         try:
             cur = self.conn.cursor()
@@ -56,7 +68,7 @@ class OrderProcesor(IOrderManagementRepository):
             cur.execute(query_1)
             usersList = cur.fetchall()
             if not any(i.userId == userId and i.role == 'Admin' for i in usersList):
-                return False
+                raise NotAnAdmin
             
             query_2 = """INSERT INTO Products
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""

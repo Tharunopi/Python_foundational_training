@@ -1,3 +1,6 @@
+import sys
+sys.path.append(r"C:\Stack overflow\Python_foundational_training\Python Basics\Coding Challenge")
+
 from dao.OrderProcessor import OrderProcesor
 
 from entity.Product import Product
@@ -8,7 +11,7 @@ from entity.Clothing import Clothing
 processor = OrderProcesor()
 
 while True:
-    print("\nOrder Management System")
+    print("\n----Order Management System----")
     print("\n1. Create user")
     print("2. Create Product")
     print("3. Create Order")
