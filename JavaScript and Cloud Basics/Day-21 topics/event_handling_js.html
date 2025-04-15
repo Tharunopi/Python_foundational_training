@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <body>
+        <div id="div1"></div>
+        <div id="div2"></div>
+        <div id="ip100"></div>
+        <form name="myform1">
+            <input type="text" id="ip1">
+            <input type="button" name="bt1" value="Click here" onclick="ins()" onmousemove="displayMs()">
+
+        </form>
+        <script>
+            function display(){
+                document.getElementById("div1").innerText = "hi"
+            }
+            function displayMs(){
+                document.getElementById("div2").innerText = "mouse"
+            }
+            function ins(){
+                inp = document.getElementById("ip1").value;
+                document.getElementById("ip100").innerText = inp
+            }
+        </script>
+    </body>
+</html>
