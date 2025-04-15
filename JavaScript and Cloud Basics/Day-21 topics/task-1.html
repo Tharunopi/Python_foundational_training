@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    Task-1
+</head>
+
+<body>
+    <form>
+        <input type="text" id="m1" placeholder="M1">
+        <input type="text" id="m2" placeholder="M2">
+        <input type="text" id="m3" placeholder="M3">
+        <input type="button" id="bt1" value="Submit" onclick="operations()">
+    </form>
+    
+    <div id="div1"></div>
+    <div id="div2"></div>
+    <div id="div3"></div>
+    
+
+    <script>
+        function operations(){
+            m1 = document.getElementById("m1").value
+            m1 = parseInt(m1)
+            m2 = document.getElementById("m2").value
+            m2 = parseInt(m2)
+            m3 = document.getElementById("m3").value
+            m3 = parseInt(m3)
+
+            sum = m1 + m2 + m3;
+            avg = (m1 + m2 + m3) / 3;
+
+            result = "Fail";
+            if (avg > 40){
+                result = "Pass";
+            }
+
+            document.getElementById("div1").innerText = 'sum : ' + sum  
+            document.getElementById("div2").innerText = "avg : " + avg
+            document.getElementById("div3").innerText = "result : " + result
+        }
+    </script>
+</body>
