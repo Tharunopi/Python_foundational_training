@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<head>
+    <b>Task-1</b>
+</head>
+
+<body>
+    <div><b>Product</b></div>
+    <form>
+        <div>Pid</div>
+        <input type="text" id="inp1" placeholder="pid">
+        <div>Pname</div>
+        <input type="text" id="inp2" placeholder="pname">
+        <div>Price</div>
+        <input type="text" id="inp3" placeholder="price">
+        <div>Description</div>
+        <input type="text" id="inp4" placeholder="description">
+    </form>
+    
+    <p></p>
+    <div><b>Customer</b></div>
+    <form>
+        <div>Cid</div>
+        <input type="text" id="inp5" placeholder="cid">
+        <div>Cname</div>
+        <input type="text" id="inp6" placeholder="cname">
+    </form>
+
+    <p></p>
+    <div><b>Order</b></div>
+    <form>
+        <div>Qty</div>
+        <input type="text" id="inp7" placeholder="qty">
+    </form>
+
+    <p></p>
+    <input type="button" id="bt1" value="Submit" onclick="processData()">
+
+    <div id="showorderinfo"></div>
+    <div id="showtax"></div>
+    <div id="showcid"></div>
+    <div id="showcname"></div>
+    <div id="showpid"></div>
+    <div id="showpname"></div>
+    <div id="showqty"></div>
+    <div id="showfinal"></div>
+
+    <script>
+
+        function processData(){
+            pid = parseInt(document.getElementById("inp1").value);
+            pname = document.getElementById("inp2").value;
+            price = parseFloat(document.getElementById("inp3").value);
+            desc = document.getElementById("inp4").value;
+
+            cid = parseInt(document.getElementById("inp5").value);
+            cname = document.getElementById("inp6").value;
+
+            qty = parseInt(document.getElementById("inp7").value);
+
+            tax = price * 0.18;
+            afterTax = price + tax;
+            document.getElementById("showorderinfo").innerHTML = "<b>Order Info</b>"
+            document.getElementById("showtax").innerText = "Tax : " + (tax);
+
+            document.getElementById("showcid").innerText = "Cid : " + (cid)
+            document.getElementById("showcname").innerText = "Cname : " + (cname)
+            document.getElementById("showpid").innerText = "Pid : " + (pid)
+            document.getElementById("showpname").innerText = "Pname : " + (pname)
+            document.getElementById("showqty").innerText = "Qty : " + (qty)
+            document.getElementById("showfinal").innerText ="Final Amount: " + (afterTax)
+
+        }
+
+
+
+    </script>
+
+</body>

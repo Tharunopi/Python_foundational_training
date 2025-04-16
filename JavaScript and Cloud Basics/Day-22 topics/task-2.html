@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<head>
+    <b>Credit Card Validator</b>
+</head>
+
+<body>
+    <form>
+    <p></p>
+    <div>Enter card number</div>
+    <input type="text" id="cardno" placeholder="credit card number"> 
+    <p></p>
+    <input type="button" id="bt1" value="check" onclick="process()">
+    </form>
+
+    <p></p>
+    <div id="firsthalf"></div>
+    <div id="firsthalfchanged"></div>
+    <p></p>
+    <div id="secondhalf"></div>
+    <div id="secondhalfchanged"></div>
+    <p></p>
+    <div id="firsthalfsum"></div>
+    <div id="secondhalfsum"></div>
+    <p></p>
+    <div id="firsthalfdiv"></div>
+    <div id="secondhalfdiv"></div>
+    <p></p>
+    <div id="cardstats"></div>
+
+    <script>
+        function process(){
+            cardNumber = document.getElementById("cardno").value
+
+            if ((cardNumber.length) != 16){
+                alert("Invalid Number Lenght")
+                return
+            }
+
+            firstHalf1 = cardNumber.slice(0, 4)
+            firstHalf2 = cardNumber.slice(4, 8)
+            secondHalf1 = cardNumber.slice(8, 12)
+            secondHalf2 = cardNumber.slice(12, 17)
+
+            document.getElementById("firsthalf").innerText = "First Half: " + firstHalf1 + " " + firstHalf2
+            document.getElementById("firsthalfchanged").innerText = "First Half Changed : " + firstHalf2 + " " + firstHalf1
+            document.getElementById("secondhalf").innerText = "Second Half: " + secondHalf1 + " " + secondHalf2
+            document.getElementById("secondhalfchanged").innerText = "Second Half Changed : " + secondHalf2+ " " + secondHalf1
+
+            firstHalf1sum = 0
+            for (let i of firstHalf1){
+                firstHalf1sum += parseInt(i)
+            }
+
+            firstHalf2sum = 0
+            for (let i of firstHalf2){
+                firstHalf2sum += parseInt(i)
+            }
+
+            secondHalf1sum = 0
+            for (let i of secondHalf1){
+                secondHalf1sum += parseInt(i)
+            }
+
+            secondHalf2sum = 0
+            for (let i of secondHalf2){
+                secondHalf2sum += parseInt(i)
+            }
+
+            val1 = firstHalf1sum + firstHalf2sum
+            val2 = secondHalf1sum + secondHalf2sum
+            document.getElementById("firsthalfsum").innerText = "Sum: " + firstHalf1sum + " + " + firstHalf2sum + " = " + (val1)
+            document.getElementById("secondhalfsum").innerText = "Sum: " + secondHalf1sum + " + " + secondHalf2sum + " = " + (val2)
+
+            rem1 = val1 % 2
+            rem2 = val2 % 2
+
+            document.getElementById("firsthalfdiv").innerText = "First Half Remainder: " + rem1
+            document.getElementById("secondhalfdiv").innerText = "Second Half Remainder: " + rem2
+
+            if ((rem1 != 0) && (rem2 % 2 != 0)){
+                document.getElementById("cardstats").innerHTML = "<b>Valid Credit Card</b>"
+            }
+            else{
+                document.getElementById("cardstats").innerHTML = "<b>Invalid Credit Card</b>"
+            }
+        }
+    </script>
+</body>
